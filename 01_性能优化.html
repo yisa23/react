@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Document</title>
+    <script defer src="01_性能优化.js"></script>
+    <style>
+      div {
+        width: 100px;
+        height: 100px;
+        background-color: blueviolet;
+        transform: translateZ(0);
+      }
+      video {
+        width: 100px;
+      }
+      p {
+        will-change: transform;
+      }
+      span {
+        position: absolute;
+        animation: ani 1s infinite alternate;
+      }
+      @keyframes ani {
+        from {
+          left: 0;
+        }
+        to {
+          left: 100px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div></div>
+    <video
+      src="http://web.sanguosha.com/login/img/zhangqiying-YK_2.mp4"
+      controls
+    ></video>
+    <!-- 需开启硬件加速模式 -->
+    <canvas width="300" height="300"></canvas>
+    <p>Lorem.</p>
+    <span>span</span>
+    <hr />
+    <button id="debounce">防抖debounce</button>
+    <button id="throttle">节流throttle</button>
+    <script>
+      const debounce = document.getElementById("debounce");
+      let timerId;
+      debounce.onclick = function () {
+        timerId && clearTimeout(timerId);
+        timerId = setTimeout(() => {
+          console.log("debounce()");
+        }, 2000);
+      };
+      const throttle = document.getElementById("throttle");
+      //   let start = 0;
+      //   throttle.onclick = function () {
+      //     let now = Date.now();
+      //     if (now - start < 2000) {
+      //       return;
+      //     }
+      //     start = now;
+      //     console.log("throttle()");
+      //   };
+      let flag = 1;
+      throttle.onclick = function () {
+        if (flag) {
+          console.log("throttle()");
+          flag = 0;
+          setTimeout(() => {
+            flag = 1;
+          }, 2000);
+        }
+      };
+    </script>
+  </body>
+</html>
