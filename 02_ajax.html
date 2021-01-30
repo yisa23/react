@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button id="save">save</button>
+    <button id="read">read</button>
+    <button id="delete">delete</button>
+    <button id="clear">clear</button>
+    <script>
+      click("save", () => {
+        localStorage.setItem("user", "Tom");
+      });
+      click("read", () => {
+        console.log(localStorage.getItem("user"));
+      });
+      click("delete", () => {
+        localStorage.removeItem("user");
+      });
+      click("clear", () => {
+        localStorage.clear();
+      });
+      window.onstorage = (ev) => {
+        console.log(ev);
+      };
+      function click(id, fn) {
+        document.getElementById(id).onclick = fn;
+      }
+    </script>
+    <div id="hello"></div>
+    <script>
+      (() => {
+        const xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = () => {
+          if (xhr.readyState === 4) {
+            document.getElementById("hello").append(xhr.response);
+          }
+        };
+        xhr.open("GET", "http://localhost/hello/1?name=tom");
+        xhr.send();
+      })();
+    </script>
+    <script>
+      (() => {
+        const xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = () => {
+          if (xhr.readyState === 4) {
+            document.getElementById("hello").append(xhr.response);
+          }
+        };
+        xhr.open("POST", "http://localhost/test");
+        xhr.setRequestHeader(
+          "content-type",
+          "application/x-www-form-urlencoded"
+        );
+        xhr.send("id=1&name=tom");
+        xhr.abort();
+      })();
+    </script>
+  </body>
+</html>
