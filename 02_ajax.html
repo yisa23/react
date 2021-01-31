@@ -51,13 +51,130 @@
           }
         };
         xhr.open("POST", "http://localhost/test");
-        xhr.setRequestHeader(
-          "content-type",
-          "application/x-www-form-urlencoded"
-        );
-        xhr.send("id=1&name=tom");
-        xhr.abort();
+        // xhr.setRequestHeader(
+        //   "content-type",
+        //   "application/x-www-form-urlencoded"
+        // );
+        xhr.setRequestHeader("content-type", "application/json");
+        let o = { msg: 123 };
+        // xhr.send("id=1&name=tom");
+        xhr.send(JSON.stringify(o));
+        // xhr.abort();
       })();
+    </script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+      $.ajax({
+        url: "http://localhost/hello/10",
+        method: "GET",
+        data: { name: "jquery" },
+        success: (data) => {
+          console.log(data);
+        },
+        error: (error) => {
+          console.log(error);
+        },
+      });
+      $.get("http://localhost/hello/20", { name: "GET" }, (data) => {
+        console.log(data);
+      });
+    </script>
+    <script>
+      $.ajax({
+        url: "http://localhost/test",
+        method: "POST",
+        data: { name: "jquery", id: Date.now() },
+        success: (data) => {
+          console.log(data);
+        },
+        error: (error) => {
+          console.log(error);
+        },
+      });
+      $.post("http://localhost/test", { name: "POST" }, (data) => {
+        console.log(data);
+      });
+    </script>
+    <button id="jsonp">jsonp</button>
+    <script>
+      click("jsonp", () => {
+        window.callback = function callback(data) {
+          console.log(data);
+        };
+        const sc = document.createElement("script");
+        sc.src = "http://localhost/jsonp/callback";
+        document.body.appendChild(sc);
+      });
+      // function callback(data) {
+      //   console.log(data);
+      // }
+    </script>
+    <!-- <script src="http://localhost/jsonp/callback"></script> -->
+    <button id="jquery">jquery</button>
+    <script>
+      click("jquery", () => {
+        $.ajax({
+          url: "http://localhost/jsonp2",
+          method: "get",
+          success: (data) => {
+            console.log(data);
+          },
+          dataType: "jsonp",
+        });
+      });
+      $.getJSON("http://localhost/jsonp2?callback=?", (data) => {
+        console.log(data);
+      });
+    </script>
+    <script>
+      ajax({
+        url: "http://localhost/test1",
+        method: "post",
+        data: {
+          name: "66666666666",
+        },
+        success: (data) => {
+          console.log(data);
+        },
+        error: (error) => {
+          console.log(error);
+        },
+      });
+
+      function ajax(options) {
+        const { url, method, data, success, error } = options;
+        const xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = () => {
+          if (xhr.readyState !== 4) {
+            return;
+          }
+          if (xhr.status === 200) {
+            success && success(xhr.response);
+          } else {
+            error && error("error");
+          }
+        };
+        let params = "";
+        if (data) {
+          for (const key in data) {
+            if (Object.hasOwnProperty.call(data, key)) {
+              const val = data[key];
+              params += key + "=" + val + "&";
+            }
+          }
+        }
+        if ((method || "get").toLowerCase() === "post") {
+          xhr.open(method, url);
+          xhr.setRequestHeader(
+            "content-type",
+            "application/x-www-form-urlencoded"
+          );
+          xhr.send(params);
+        } else {
+          xhr.open(method, url + "?" + params);
+          xhr.send();
+        }
+      }
     </script>
   </body>
 </html>
