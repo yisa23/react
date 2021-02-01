@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      const promise = new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.onload = () => {
+          resolve(JSON.parse(xhr.response));
+        };
+        xhr.onerror = () => {
+          reject(xhr.statusText);
+        };
+        xhr.open("GET", "package.json");
+        xhr.send();
+      });
+      promise.then((value) => {
+        console.log("then", value);
+      });
+      promise.catch((reason) => {
+        console.log("catch", reason);
+      });
+      console.log("main", promise);
+
+      Promise.resolve(1).then((v) => {
+        console.log(v);
+      });
+      Promise.reject(2).catch((e) => {
+        console.log(e);
+      });
+      Promise.all([Promise.resolve(2), Promise.resolve(1), Promise.resolve(6)])
+        .then((v) => {
+          console.log(v);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+      Promise.race([Promise.reject(2), Promise.resolve(1), Promise.resolve(6)])
+        .then((v) => {
+          console.log(v);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    </script>
+  </body>
+</html>
